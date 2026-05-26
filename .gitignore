@@ -1,0 +1,4 @@
+.vscode/
+.idea/
+*.pem
+.DS_Store
