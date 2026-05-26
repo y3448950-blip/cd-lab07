@@ -8,6 +8,16 @@ jobs:
     steps:
       - name: check out the code
         uses: actions/checkout@v4
+
+      - name: set ubuntu as owner (for Ubuntu 24+)
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.SSH_USER_NAME }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            sudo chown -R ubuntu /var/www/html
+
       - name: copy file to server
         uses: appleboy/scp-action@master
         with:
@@ -18,3 +28,12 @@ jobs:
           source: "./html/*"
           target: "/var/www/html"
           strip_components: 1
+
+      - name: set root as owner back (for Ubuntu 24+)
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.SSH_USER_NAME }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            sudo chown -R root /var/www/html
